@@ -15,29 +15,26 @@ def evolve(frame_num, grid, grid_size):
 
     height, width = grid.shape
     new_grid = np.zeros((height, width))
+    neighbors = np.zeros((height, width))
     
-    neigorhood = np.zeros((height, width))
-    
-    for i in [-1, 0, 1]:
-        for j in [-1, 0, 1]:
+    # Count the number of neighbors for each cell
+    for i in range(-1, 2):
+        for j in range(-1, 2):
             if i == 0 and j == 0:
                 continue
-            shifted_grid = np.roll(grid, shift=(i, j), axis=(0, 1))
-            neigorhood += shifted_grid
+            neighbors += np.roll(grid, shift=(i, j), axis=(0, 1))
             
     
-    for i in range(height):
-        for j in range(width):
-            if grid[i, j] == 1 and (neigorhood[i, j] == 2 or neigorhood[i, j] == 3):
+    for i in range(0, height):
+        for j in range(0, width):
+            # Apply the rules of Conway's Game of Life
+            if grid[i, j] == 1 and (neighbors[i, j] == 2 or neighbors[i, j] == 3):
                 new_grid[i, j] = 1
-            elif grid[i, j] == 0 and neigorhood[i, j] == 3:
+            elif grid[i, j] == 0 and neighbors[i, j] == 3:
                 new_grid[i, j] = 1
 
-    
-    
+
     grid[:] = new_grid[:]
-
-
     # =====================
     
     # Update the plot with the new grid
